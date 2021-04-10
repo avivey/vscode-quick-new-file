@@ -1,7 +1,7 @@
 {
   "name": "quick-new-file",
   "displayName": "Quick New File",
-  "description": "",
+  "description": "Create a new file that's similar to this file: same package and language.",
   "version": "0.0.1",
   "engines": {
     "vscode": "^1.55.0"
@@ -10,14 +10,22 @@
     "Other"
   ],
   "activationEvents": [
-    "onCommand:quick-new-file.helloWorld"
+    "*"
   ],
   "main": "./out/extension.js",
   "contributes": {
     "commands": [
       {
-        "command": "quick-new-file.helloWorld",
-        "title": "Hello World"
+        "command": "quick-new-file.new-file",
+        "title": "New similar file"
+      }
+    ],
+    "keybindings":[
+      {
+        "command": "quick-new-file.new-file",
+        "key": "ctrl+shift+n",
+        "mac": "cmd+shift+n",
+        "when": "editorTextFocus"
       }
     ]
   },

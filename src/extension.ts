@@ -1,27 +1,77 @@
-// The module 'vscode' contains the VS Code extensibility API
-// Import the module and reference it with the alias vscode in your code below
+import * as path from 'path';
 import * as vscode from 'vscode';
+import * as templates from './templates';
 
-// this method is called when your extension is activated
-// your extension is activated the very first time the command is executed
 export function activate(context: vscode.ExtensionContext) {
+	function d(disposable: vscode.Disposable) {
+		context.subscriptions.push(disposable);
+	}
 
-	// Use the console to output diagnostic information (console.log) and errors (console.error)
-	// This line of code will only be executed once when your extension is activated
-	console.log('Congratulations, your extension "quick-new-file" is now active!');
+	d(vscode.commands.registerCommand('quick-new-file.new-file', async () => {
 
-	// The command has been defined in the package.json file
-	// Now provide the implementation of the command with registerCommand
-	// The commandId parameter must match the command field in package.json
-	let disposable = vscode.commands.registerCommand('quick-new-file.helloWorld', () => {
-		// The code you place here will be executed every time your command is executed
+		if (!vscode.window.activeTextEditor) {
+			vscode.window.showErrorMessage("New file must be based on an existing file.");
+			return;
+		}
 
-		// Display a message box to the user
-		vscode.window.showInformationMessage('Hello World from Quick New File!');
-	});
+		const referenceFile = vscode.window.activeTextEditor.document;
 
-	context.subscriptions.push(disposable);
+		if (referenceFile.isUntitled) {
+			vscode.window.showErrorMessage("Cannot create new file based on untitled file.");
+			return;
+		}
+
+		const fileMaker = templates.getFileMaker(referenceFile);
+
+		const extension = path.extname(referenceFile.fileName);
+
+		function validateFilename(input: string) {
+			if (/[\s\\/]/.test(input)) {
+				return 'Invalid filename';
+			}
+			// TODO check for file exists
+			return null;
+		}
+
+		const filename = await vscode.window.showInputBox({
+			placeHolder: 'filename',
+			prompt: 'Enter new filename.',
+			validateInput: validateFilename,
+			value: 'newfilename' + extension,
+			valueSelection: [0, 'newfilename'.length],
+		});
+
+		if (filename === undefined) {
+			return;
+		}
+		fileMaker.updateContent(filename);
+
+		const editOps = new vscode.WorkspaceEdit();
+
+		const newFilePath = path.dirname(referenceFile.uri.path) + '/' + filename;
+		const uri = referenceFile.uri.with({ path: newFilePath });
+		editOps.createFile(uri);
+
+		const content = fileMaker.body;
+		editOps.insert(uri, new vscode.Position(0, 0), content);
+
+
+		if (!await vscode.workspace.applyEdit(editOps)) {
+			vscode.window.showErrorMessage("Failed to create file.");
+			return;
+		}
+
+		// TODO explicitly set language
+
+		const newDoc = await vscode.workspace.openTextDocument(uri);
+		const editor = await vscode.window.showTextDocument(newDoc);
+		editor.selection = fileMaker.selection;
+
+		await fileMaker.postProcess(newDoc);
+		await newDoc.save();
+
+	}));
+
 }
 
-// this method is called when your extension is deactivated
-export function deactivate() {}
+export function deactivate() { }
