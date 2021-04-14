@@ -2,7 +2,8 @@
   "name": "quick-new-file",
   "displayName": "Quick New File",
   "description": "Create a new file that's similar to this file: same package and language.",
-  "version": "0.0.1",
+  "publisher": "avive",
+  "version": "1.0.0",
   "engines": {
     "vscode": "^1.55.0"
   },
@@ -20,7 +21,7 @@
         "title": "New similar file"
       }
     ],
-    "keybindings":[
+    "keybindings": [
       {
         "command": "quick-new-file.new-file",
         "key": "ctrl+shift+n",
@@ -28,6 +29,10 @@
         "when": "editorTextFocus"
       }
     ]
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/avivey/vscode-quick-new-file.git"
   },
   "scripts": {
     "vscode:prepublish": "npm run compile",
@@ -48,6 +53,7 @@
     "glob": "^7.1.6",
     "mocha": "^8.2.1",
     "typescript": "^4.1.3",
+    "vsce": "^1.87.1",
     "vscode-test": "^1.5.0"
   }
 }
