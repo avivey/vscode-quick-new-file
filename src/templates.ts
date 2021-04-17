@@ -81,7 +81,6 @@ function getPackageDeclaration(keyword: string, reference: vscode.TextDocument):
     for (var i = 0; i < reference.lineCount; i++) {
         const line = reference.lineAt(i).text.trim();
         if (line.startsWith(keyword)) {
-            // TODO this is a hack, I should parse the line and stuff.
             return line + '\n\n';
         }
     }
@@ -90,8 +89,25 @@ function getPackageDeclaration(keyword: string, reference: vscode.TextDocument):
 
 class GoFileMaker extends NewFileMaker {
     updateContentByLanguage(_: string): void {
-        const packageLine = getPackageDeclaration('package', this.reference);
-        this.body = packageLine || 'package main\n\n';
+        const packageLine = getPackageDeclaration('package', this.reference) || 'package main\n\n';
+
+        var buildConstraints = '';
+        for (var i = 0; i < this.reference.lineCount; i++) {
+            const line = this.reference.lineAt(i).text.trim();
+            if (/^\/\/\s*\+build/.test(line)) {
+                buildConstraints += line + '\n';
+            } else if (line.startsWith('//') || line.length === 0) {
+                continue;
+            } else {
+                break;
+            }
+        }
+
+        if (buildConstraints) {
+            buildConstraints += '\n';
+        }
+
+        this.body = buildConstraints + packageLine;
     }
 }
 
