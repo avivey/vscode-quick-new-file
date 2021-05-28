@@ -1,0 +1,10 @@
+Simple Go file
+This test is also used to test the test framework...
+:: go
+package one
+
+func moo() {}
+::
+package one
+
+::

@@ -1,0 +1,8 @@
+:: go
+package alpha
+
+import "fmt"
+::
+package alpha
+
+::

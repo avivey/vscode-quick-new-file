@@ -1,0 +1,26 @@
+Go file with lots of stuff
+:: go
+// +build flag1,flag2
+// +build flag3 and flag 4
+
+// This is a comment before the package declaration
+package main
+
+import "fmt"
+import "image"
+import _ "image/png"
+
+import (
+    "utils"
+    "errors"
+    "log"
+)
+
+var index int;
+::
+// +build flag1,flag2
+// +build flag3 and flag 4
+
+package main
+
+::

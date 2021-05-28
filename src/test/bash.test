@@ -1,0 +1,13 @@
+Bash file with some `set`
+:: shellscript
+set -e
+set +x
+
+code
+# "set" command after code should not be copied over.
+set -e
+::
+set -e
+set +x
+
+::

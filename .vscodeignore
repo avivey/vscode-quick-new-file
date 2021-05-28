@@ -1,11 +1,13 @@
 .vscode/**
 .vscode-test/**
 out/test/**
+out/__mocks__/**
 src/**
 .git*
 .yarnrc
 vsc-extension-quickstart.md
 **/tsconfig.json
+**/jest.config.js
 **/.eslintrc.json
 **/*.map
 **/*.ts
@@ -14,3 +16,4 @@ vsc-extension-quickstart.md
 .arc*
 .pinterest-linters/
 TODO
+**/*.sh
