@@ -6,6 +6,8 @@ void main() {
     prinln("Hello!");
 }
 :: newfilename.java
+import foo.bar;
+
 public class newfilename {
 
 }

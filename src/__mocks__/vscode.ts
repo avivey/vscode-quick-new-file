@@ -5,8 +5,8 @@ export class Position {
     character: number;
 
     constructor(line: number, character: number) {
-        this.line=line;
-        this.character=character;
+        this.line = line;
+        this.character = character;
     }
 
     // isBefore(other: Position): boolean;
@@ -15,7 +15,9 @@ export class Position {
     // isAfterOrEqual(other: Position): boolean;
     // isEqual(other: Position): boolean;
     // compareTo(other: Position): number;
-    // translate(lineDelta?: number, characterDelta?: number): Position;
+    translate(lineDelta: number = 0, characterDelta: number = 0): Position {
+        return new Position(this.line + lineDelta, this.character + characterDelta);
+    }
     // translate(change: { lineDelta?: number; characterDelta?: number; }): Position;
     // with(line?: number, character?: number): Position;
     // with(change: { line?: number; character?: number; }): Position;
@@ -41,8 +43,14 @@ export class Range {
 }
 
 export class Selection extends Range {
+    anchor: Position;
+    active: Position;
     constructor(anchorLine: number, anchorCharacter: number, activeLine: number, activeCharacter: number) {
         super(new Position(anchorLine, anchorCharacter), new Position(activeLine, activeCharacter));
+
+        // generally wrong, close enough for me
+        this.anchor = this.start;
+        this.active = this.end;
     }
 
     /**

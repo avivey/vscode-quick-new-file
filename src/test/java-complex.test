@@ -1,5 +1,7 @@
-Java file with a package and imports
+Java file with a package and imports and hashbang!
 :: java
+#! /usr/bin/env java
+
 package foo.bar;
 
 import a;
@@ -11,6 +13,7 @@ void main() {
     prinln("Hello!");
 }
 :: newfilename.java
+#! /usr/bin/env java
 package foo.bar;
 
 import a;

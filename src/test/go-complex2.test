@@ -1,5 +1,6 @@
 Go file with lots of stuff
 :: go
+#! hashbang
 // +build flag1,flag2
 // +build flag3 and flag 4
 
@@ -22,6 +23,7 @@ var index int;
 
 import "args"
 ::
+#! hashbang
 // +build flag1,flag2
 // +build flag3 and flag 4
 

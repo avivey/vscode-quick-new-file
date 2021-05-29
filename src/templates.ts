@@ -2,6 +2,8 @@ import * as vscode from 'vscode';
 import * as path from 'path';
 import * as fs from 'fs';
 
+import * as utils from './utils';
+
 export function getFileMaker(reference: vscode.TextDocument): NewFileMaker {
     const ctor = findTemplateForLanguage(reference.languageId);
     return new ctor(reference);
@@ -78,37 +80,84 @@ function naiveFileMaker(content: string): typeof NewFileMaker {
 }
 
 
-function getPackageDeclaration(keyword: string, reference: vscode.TextDocument): string {
+function getPackageDeclaration(keyword: string, reference: vscode.TextDocument): string[] {
     for (var i = 0; i < reference.lineCount; i++) {
         const line = reference.lineAt(i).text.trim();
         if (line.startsWith(keyword)) {
-            return line + '\n\n';
+            return [line, ''];
         }
     }
-    return '';
+    return [];
 }
 
 class GoFileMaker extends NewFileMaker {
     updateContentByLanguage(_: string): void {
-        const packageLine = getPackageDeclaration('package', this.reference) || 'package main\n\n';
+        const packageLine = getPackageDeclaration('package', this.reference) || ['package main', ''];
+        const imports = this.getImports();
 
-        var buildConstraints = '';
+        var buildConstraints: string[] = [];
         for (var i = 0; i < this.reference.lineCount; i++) {
             const line = this.reference.lineAt(i).text.trim();
             if (/^\/\/\s*\+build/.test(line)) {
-                buildConstraints += line + '\n';
-            } else if (line.startsWith('//') || line.length === 0) {
+                buildConstraints.push(line);
+            } else if (line.startsWith('#!') || line.startsWith('//') || line.length === 0) {
                 continue;
             } else {
                 break;
             }
         }
+        if (buildConstraints.length) {
+            buildConstraints.push('');
+        }
+        var text: string[] = [];
+        text = text.concat(buildConstraints, packageLine, imports);
+        this.body = utils.dedupStringArray(text).join('\n') + '\n';
+    }
 
-        if (buildConstraints) {
-            buildConstraints += '\n';
+    getImports(): string[] {
+        var imports: string[] = [];
+        var inImportSection = false;
+
+        for (var i = 0; i < this.reference.lineCount; i++) {
+            const line = this.reference.lineAt(i).text.trim();
+            if (line.startsWith('#!') || line.startsWith('//') || line.startsWith('package')) {
+                continue;
+            }
+            if (line.length === 0) {
+                if (inImportSection) {
+                    imports.push(line);
+                }
+                continue;
+            }
+
+            if (/^import\s*\(.*\)/.test(line)) {
+                inImportSection = true;
+                imports.push(line);
+            } else if (/^import\s*\(/.test(line)) {
+                // import list
+                inImportSection = true;
+                imports.push(line);
+                while (i < this.reference.lineCount) {
+                    i++;
+                    const line = this.reference.lineAt(i).text;
+                    imports.push(line);
+                    if (/\)/.test(line)) {
+                        break;
+                    }
+                }
+            } else if (line.startsWith('import')) {
+                inImportSection = true;
+                imports.push(line);
+            } else {
+                // First non-import line
+                inImportSection = false;
+                break;
+            }
         }
 
-        this.body = buildConstraints + packageLine;
+        imports.push('');
+
+        return imports;
     }
 }
 
@@ -118,10 +167,48 @@ class JavaFileMaker extends NewFileMaker {
 
         // Is there a simpler way to get the name w/o extension?
         const className = path.basename(newFileName, path.extname(newFileName));
-        this.body = packageLine + 'public class ' + className + ' {\n\n}\n';
 
-        const lineCount = this.body.split('\n').length;
+        const imports = this.getImports();
+        const classBoilerplate = ['public class ' + className + ' {', '', '}'];
+
+        var text: string[] = [];
+        text = text.concat(packageLine, imports, classBoilerplate);
+        text = utils.dedupStringArray(text);
+        this.body = text.join('\n').trim() + '\n';
+
+        const lineCount = text.length;
         this.selection = new vscode.Selection(lineCount - 2, 0, lineCount - 2, 0);
+    }
+
+    getImports(): string[] {
+        var imports: string[] = [];
+        var inImportSection = false;
+
+        for (var i = 0; i < this.reference.lineCount; i++) {
+            const line = this.reference.lineAt(i).text.trim();
+            if (line.startsWith('#!') || line.startsWith('//') || line.startsWith('package')) {
+                continue;
+            }
+            if (line.length === 0) {
+                if (inImportSection) {
+                    imports.push(line);
+                }
+                continue;
+            }
+
+            if (line.startsWith('import')) {
+                inImportSection = true;
+                imports.push(line);
+            } else {
+                // First non-import line
+                inImportSection = false;
+                break;
+            }
+        }
+
+        imports.push('');
+
+        return imports;
     }
 }
 
