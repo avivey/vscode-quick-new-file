@@ -1,0 +1,14 @@
+Java file with a package
+:: java
+package foo.bar;
+
+void main() {
+    prinln("Hello!");
+}
+:: newfilename.java
+package foo.bar;
+
+public class newfilename {
+
+}
+::

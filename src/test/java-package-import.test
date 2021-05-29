@@ -1,0 +1,19 @@
+Java file with a package and imports
+:: java
+package foo.bar;
+
+import a;
+import b;
+
+import static c;
+
+void main() {
+    prinln("Hello!");
+}
+:: newfilename.java
+package foo.bar;
+
+public class newfilename {
+
+}
+::

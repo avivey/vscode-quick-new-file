@@ -1,0 +1,12 @@
+Java file with imports
+:: java
+import foo.bar;
+
+void main() {
+    prinln("Hello!");
+}
+:: newfilename.java
+public class newfilename {
+
+}
+::

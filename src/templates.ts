@@ -1,4 +1,5 @@
 import * as vscode from 'vscode';
+import * as path from 'path';
 import * as fs from 'fs';
 
 export function getFileMaker(reference: vscode.TextDocument): NewFileMaker {
@@ -115,8 +116,9 @@ class JavaFileMaker extends NewFileMaker {
     updateContentByLanguage(newFileName: string): void {
         const packageLine = getPackageDeclaration('package', this.reference);
 
-        const className = newFileName.slice(0, -5);
-        this.body = packageLine + 'public class ' + className + ' {\n\n}';
+        // Is there a simpler way to get the name w/o extension?
+        const className = path.basename(newFileName, path.extname(newFileName));
+        this.body = packageLine + 'public class ' + className + ' {\n\n}\n';
 
         const lineCount = this.body.split('\n').length;
         this.selection = new vscode.Selection(lineCount - 2, 0, lineCount - 2, 0);
