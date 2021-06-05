@@ -4,6 +4,8 @@ import * as fs from 'fs';
 
 import * as utils from './utils';
 
+const HASHBANG = '#!';
+
 export function getFileMaker(reference: vscode.TextDocument): NewFileMaker {
     const ctor = findTemplateForLanguage(reference.languageId);
     return new ctor(reference);
@@ -41,7 +43,7 @@ export class NewFileMaker {
 
     handleHashbang() {
         const line = this.reference.lineAt(0).text;
-        if (!line.startsWith('#!')) {
+        if (!line.startsWith(HASHBANG)) {
             return;
         }
 
@@ -99,7 +101,7 @@ class GoFileMaker extends NewFileMaker {
             const line = this.reference.lineAt(i).text.trim();
             if (/^\/\/\s*\+build/.test(line)) {
                 buildConstraints.push(line);
-            } else if (line.startsWith('#!') || line.startsWith('//') || line.length === 0) {
+            } else if (line.startsWith(HASHBANG) || line.startsWith('//') || line.length === 0) {
                 continue;
             } else {
                 break;
@@ -119,7 +121,7 @@ class GoFileMaker extends NewFileMaker {
 
         for (var i = 0; i < this.reference.lineCount; i++) {
             const line = this.reference.lineAt(i).text.trim();
-            if (line.startsWith('#!') || line.startsWith('//') || line.startsWith('package')) {
+            if (line.startsWith(HASHBANG) || line.startsWith('//') || line.startsWith('package')) {
                 continue;
             }
             if (line.length === 0) {
@@ -185,7 +187,7 @@ class JavaFileMaker extends NewFileMaker {
 
         for (var i = 0; i < this.reference.lineCount; i++) {
             const line = this.reference.lineAt(i).text.trim();
-            if (line.startsWith('#!') || line.startsWith('//') || line.startsWith('package')) {
+            if (line.startsWith(HASHBANG) || line.startsWith('//') || line.startsWith('package')) {
                 continue;
             }
             if (line.length === 0) {
