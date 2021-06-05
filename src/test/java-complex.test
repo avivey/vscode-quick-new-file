@@ -14,6 +14,7 @@ void main() {
 }
 :: newfilename.java
 #! /usr/bin/env java
+
 package foo.bar;
 
 import a;

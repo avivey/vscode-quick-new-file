@@ -24,6 +24,7 @@ var index int;
 import "args"
 ::
 #! hashbang
+
 // +build flag1,flag2
 // +build flag3 and flag 4
 

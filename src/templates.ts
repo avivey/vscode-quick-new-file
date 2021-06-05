@@ -45,11 +45,10 @@ export class NewFileMaker {
             return;
         }
 
-        this.body = line + '\n' + this.body;
+        this.body = line + '\n\n' + this.body;
         this.makeExecutable = true;
 
-        this.translateSelection(1);
-
+        this.translateSelection(2);
     }
 
     async postProcess(document: vscode.TextDocument) {

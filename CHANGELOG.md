@@ -1,3 +1,7 @@
+## next
+
+- Add blank line after hashbang line
+
 ## [1.1.0] May 2021
 
 - Also copy Imports to new file (Go, Java)
