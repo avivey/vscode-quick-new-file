@@ -1,4 +1,4 @@
-## next
+## [1.2.0] July 2021
 
 - Add blank line after hashbang line
 - Support Python (Imports)

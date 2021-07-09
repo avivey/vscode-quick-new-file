@@ -3,7 +3,7 @@
   "displayName": "Quick New File",
   "description": "Create a new file that's similar to this file: same package and language.",
   "publisher": "avive",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "engines": {
     "vscode": "^1.55.0"
   },
