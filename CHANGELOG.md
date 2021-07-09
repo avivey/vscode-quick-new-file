@@ -1,6 +1,7 @@
 ## next
 
 - Add blank line after hashbang line
+- Support Python (Imports)
 
 ## [1.1.0] May 2021
 

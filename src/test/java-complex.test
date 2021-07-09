@@ -4,8 +4,13 @@ Java file with a package and imports and hashbang!
 
 package foo.bar;
 
+// comment
 import a;
 import b;
+
+/*
+multiline comment
+*/
 
 import static c;
 

@@ -14,5 +14,6 @@ Hit <kbd>ctrl+shift+N</kbd> to create a new file that has the same context as th
 ### Supported Languages
 - Go (Package, imports and build constraints)
 - Java (Package, imports and `class` boilerplate)
-- Shellscript (`set` statement)
 - PHP (`<?php`)
+- Python (Imports) (**new!**)
+- Shellscript (`set` statement)

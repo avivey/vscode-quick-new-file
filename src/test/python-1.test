@@ -1,0 +1,50 @@
+not sure yet
+:: python
+#!/usr/bin/python3
+###
+# Simple IRC Log bot
+###
+
+'''
+comment 1
+'''
+"""
+comment 2
+"""
+
+import signal
+import socket
+import ssl
+# some comment
+import sys
+
+
+
+import this
+
+from foo import bar
+import LogParsers.BasicParser
+
+
+server = "irc.freenode.net"
+port = 6697
+channel = ""
+botnick = ""
+logdir = "logs"
+password = ""
+
+import more.things
+::
+#!/usr/bin/python3
+
+import signal
+import socket
+import ssl
+import sys
+
+import this
+
+from foo import bar
+import LogParsers.BasicParser
+
+::
