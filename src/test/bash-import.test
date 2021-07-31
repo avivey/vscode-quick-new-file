@@ -1,0 +1,25 @@
+Bash file with some `set` + `source`
+:: shellscript
+#!/bin/bash -a
+set -e
+set +x
+
+source some-file
+
+. another-file
+
+code
+# "import" command after code should not be copied over.
+source do-not-import
+
+::
+#!/bin/bash -a
+
+set -e
+set +x
+
+source some-file
+
+. another-file
+
+::

@@ -1,3 +1,7 @@
+## [1.2.1] July 2021
+
+- Copy Shell import statements (`source foo`)
+
 ## [1.2.0] July 2021
 
 - Add blank line after hashbang line

@@ -20,9 +20,9 @@ function findTemplateForLanguage(languageId: string): typeof NewFileMaker {
         case 'java':
             return JavaFileMaker;
         case 'shellscript':
-            return ShellscriptFileMaker;
+            return shellscriptFileMaker;
         case 'python':
-            return PythonFileMaker;
+            return pythonFileMaker;
     }
 
     return EmptyFileMaker;
@@ -170,6 +170,26 @@ function naiveFileMaker(content: string): typeof NewFileMaker {
 }
 
 
+/**
+ * File maker for languages that require no boilerplate - only "imports" are copied.
+ */
+ function simpleFileMaker(
+    importRegex: RegExp,
+    commentMarkers: string[],
+    multilineCommentMarkers: [string, string][]): typeof NewFileMaker {
+
+    class Maker extends NewFileMaker {
+        updateContentByLanguage(_content: string): void {
+            const imports = this.getImportsSection(importRegex, commentMarkers, multilineCommentMarkers);
+
+            var text = utils.dedupStringArray(imports);
+            this.body = text.join('\n') + '\n';
+        }
+    }
+    return Maker;
+}
+
+
 function getPackageDeclaration(keyword: string, reference: vscode.TextDocument): string[] {
     for (var i = 0; i < reference.lineCount; i++) {
         const line = reference.lineAt(i).text.trim();
@@ -274,38 +294,12 @@ class JavaFileMaker extends NewFileMaker {
     }
 }
 
-// This one copies over `set` statements from the top of the file, which effect the
-// behavior of the interpreter.
-// The base class handles interpreter selection (`#!`).
-class ShellscriptFileMaker extends NewFileMaker {
-    updateContentByLanguage(_: string): void {
-        var body = "";
-        for (var i = 0; i < this.reference.lineCount; i++) {
-            const line = this.reference.lineAt(i).text.trim();
-            if (line.startsWith('#') || line.length === 0) {
-                continue;
-            }
-            if (line.startsWith('set ')) {
-                body += line + '\n';
-                continue;
-            }
-            break;
-        }
-
-        this.body = body + '\n';
-    }
-}
-
-class PythonFileMaker extends NewFileMaker {
-    updateContentByLanguage(_: string): void {
-        const imports = this.getImportsSection(
-            /^from\s.*import\s|^import\s/,
-            ['#'],
-            [["'''", "'''"], ['"""', '"""']]
-        );
-
-        var text: string[] = [];
-        text = text.concat(imports);
-        this.body = utils.dedupStringArray(text).join('\n') + '\n';
-    }
-}
+/**
+ *  For shell, `set` statements effect the behavior of the interpreter; `source` statements are effectively imports.
+ *  The base class handles interpreter selection (`#!`).
+ */
+const shellscriptFileMaker = simpleFileMaker(/^set|^\. |^source\s/, ['#'], []);
+const pythonFileMaker = simpleFileMaker(
+    /^from\s.*import\s|^import\s/,
+    ['#'],
+    [["'''", "'''"], ['"""', '"""']]);

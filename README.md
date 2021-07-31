@@ -16,4 +16,4 @@ Hit <kbd>ctrl+shift+N</kbd> to create a new file that has the same context as th
 - Java (Package, imports and `class` boilerplate)
 - PHP (`<?php`)
 - Python (Imports) (**new!**)
-- Shellscript (`set` statement)
+- Shellscript (`set` and `source` statement)
