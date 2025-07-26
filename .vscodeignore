@@ -1,5 +1,6 @@
 .vscode/**
 .vscode-test/**
+.vs*
 out/test/**
 out/__mocks__/**
 src/**
@@ -8,7 +9,7 @@ src/**
 vsc-extension-quickstart.md
 **/tsconfig.json
 **/jest.config.js
-**/.eslintrc.json
+**/eslint.config.mjs
 **/*.map
 **/*.ts
 **/*.vsix

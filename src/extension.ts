@@ -7,14 +7,14 @@ export function activate(context: vscode.ExtensionContext) {
 		context.subscriptions.push(disposable);
 	}
 
-	d(vscode.commands.registerCommand('quick-new-file.new-file', async () => {
+	d(vscode.commands.registerTextEditorCommand('quick-new-file.new-file', async (activeEditor, edit) => {
 
-		if (!vscode.window.activeTextEditor) {
+		if (!activeEditor) {
 			vscode.window.showErrorMessage("New file must be based on an existing file.");
 			return;
 		}
 
-		const referenceFile = vscode.window.activeTextEditor.document;
+		const referenceFile = activeEditor.document;
 
 		if (referenceFile.isUntitled) {
 			vscode.window.showErrorMessage("Cannot create new file based on untitled file.");

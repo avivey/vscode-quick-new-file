@@ -3,6 +3,7 @@
 import * as vscode from 'vscode';
 
 export class TextDocument implements vscode.TextDocument {
+    encoding: string = 'utf-8';
     uri: vscode.Uri = vscode.Uri.file("c:\\foo.bar");
     fileName: string = 'file';
     isUntitled: boolean = false;

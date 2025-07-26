@@ -1,3 +1,7 @@
+## [1.3.0] August 2025
+
+- Update dependencies
+
 ## [1.2.1] July 2021
 
 - Copy Shell import statements (`source foo`)

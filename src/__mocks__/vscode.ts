@@ -75,17 +75,9 @@ export class Uri {
         uri.fsPath = path;
         return uri;
     }
-
-    // with(change: {
-    //     scheme?: string | undefined;
-    //     authority?: string | undefined;
-    //     path?: string | undefined;
-    //     query?: string | undefined;
-    //     fragment?: string | undefined;
-    // }): Uri ;
 }
 
 export enum EndOfLine {
-    LF = 1,
-    CRLF = 2
+    // eslint-disable-next-line
+    LF = 1, CRLF = 2,
 }
